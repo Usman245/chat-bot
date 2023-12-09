@@ -63,21 +63,27 @@ const Form = () => {
     } catch (err) {}
     setUserInput("");
   };
+  const handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
   return (
     <div className="w-full fixed bottom-0 bg-gray-900">
       <div className="w-[90%] ml-4 flex items-center  justify-center pb-4">
-        <form className="flex-none pt-2 pb-3 px-6 md:w-[700px] w-[100%] md:max-w-[700px] ">
+        <form className="flex-none pt-2 pb-3 px-6 mobile:px-2 md:w-[700px] w-[100%] md:max-w-[700px] ">
           <div className="flex rounded-[20px] border border-gray-700 bg-gray-800 ">
             <input
               type="text"
-              className="flex-grow px-4 py-[14px] bg-transparent text-white focus:outline-none"
+              className="flex-grow pl-4 py-[14px] bg-transparent text-white focus:outline-none"
               placeholder="Type your message..."
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              onKeyDown={handleKeyDown}
             />
 
             {listening ? (
@@ -108,7 +114,7 @@ const Form = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-10 text-center text-white justify-center h-8 mt-2 mr-2"
+                className="w-10 text-center text-white justify-center h-8 mobile:w-6 mobile:h-6 mobile:mt-[12px] mt-2 mr-2"
                 onClick={handleStart}
               >
                 <path
@@ -122,7 +128,7 @@ const Form = () => {
         </form>
         <button
           onClick={handleSubmit}
-          className=" bg-transparent rounded-[20px] px-2 py-2 text-white font-semibold focus:outline-none hover:bg-purple-600 transition-colors duration-300"
+          className=" bg-transparent rounded-[20px] px-2 py-2 mobile:px-1 mobile:py-1 text-white font-semibold focus:outline-none hover:bg-purple-600 transition-colors duration-300"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +136,7 @@ const Form = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-8 h-8"
+            className="w-8 h-8 mobile:w-6 mobile:h-6"
           >
             <path
               strokeLinecap="round"
