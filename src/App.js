@@ -4,7 +4,7 @@ import { MyContextProvider } from './components/Provider.jsx';
 
 function App() {
   return (
-    <div className='bg-gray-800 h-screen'>
+    <div className='flex flex-col justify-between h-screen bg-gray-800 min-h-screen'>
       <MyContextProvider>
         <Main />
       </MyContextProvider>

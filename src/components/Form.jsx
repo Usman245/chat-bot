@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -30,16 +30,45 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     setUserInteract(true);
-    setChatLog((prevLog) => [...prevLog, userInput]);
+    const userMessage = { type: "user", text: userInput };
+    setChatLog((prevConversations) => [...prevConversations, userMessage]);
     setResponseLoad(true);
+    try {
+      const response = await fetch("https://www.chatbase.co/api/v1/chat", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer 272f571d-4481-4c88-a100-1368bf7a7443",
+        },
+        body: JSON.stringify({
+          messages: [{ content: userInput, role: "user" }],
+          chatbotId: "hn8S7aaqSd8_slDFjFZZS",
+          stream: false,
+          model: "gpt-3.5-turbo",
+          temperature: 0,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw Error(errorData.message);
+      }
+      const data = await response.json();
+
+      // Handle sending the input value (whether typed or recorded) to the chatbot API
+      const apiResponse = { type: "api", text: data.text };
+
+      // Add API response to the conversations array
+      setChatLog((prevConversations) => [...prevConversations, apiResponse]);
+      setResponseLoad(false);
+    } catch (err) {}
     setUserInput("");
   };
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
   return (
-    <div className="w-full fixed bottom-0">
-      <div className="w-[90%] ml-4 flex items-center  justify-center pb-7">
+    <div className="w-full fixed bottom-0 bg-gray-900">
+      <div className="w-[90%] ml-4 flex items-center  justify-center pb-4">
         <form className="flex-none pt-2 pb-3 px-6 md:w-[700px] w-[100%] md:max-w-[700px] ">
           <div className="flex rounded-[20px] border border-gray-700 bg-gray-800 ">
             <input
@@ -48,6 +77,7 @@ const Form = () => {
               placeholder="Type your message..."
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             />
 
             {listening ? (
