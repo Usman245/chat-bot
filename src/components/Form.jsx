@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -6,8 +6,9 @@ import { useMyContext } from "./Provider";
 
 const Form = () => {
   //microphone
-  const { transcript, listening, browserSupportsSpeechRecognition } =
+  const { transcript, listening, browserSupportsSpeechRecognition, onEnd } =
     useSpeechRecognition();
+  const [recording, setRecording] = useState(false);
 
   const {
     userInput,
@@ -16,16 +17,22 @@ const Form = () => {
     setChatLog,
     setResponseLoad,
   } = useMyContext("");
+
   useEffect(() => {
-    // Update inputValue when transcript changes
     setUserInput(transcript);
+    if (transcript && !listening) {
+      handleStopRecording();
+    }
   }, [transcript]);
 
-  function handleStart() {
+  const handleStart = async () => {
     SpeechRecognition.startListening({ onEnd: handleStopRecording });
-  }
+    setRecording(true);
+  };
   const handleStopRecording = () => {
+    setRecording(false);
     SpeechRecognition.stopListening();
+    handleSubmit();
   };
 
   const handleSubmit = async (e) => {
