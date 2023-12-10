@@ -25,7 +25,7 @@ const Chat = () => {
   const { chatLog, isResponseLoad } = useMyContext();
 
   return (
-    <div className="flex flex-grow p-6 pt-10 overflow-y-auto custom-scrollbar bg-gray-800">
+    <div className="flex flex-grow p-6 pt-10 overflow-y-auto custom-scrollbar bg-gray-700">
       <div className="flex flex-col mt-10 mb-20 w-[96%]">
         {chatLog.map((item, index) => (
           <div

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -6,9 +6,8 @@ import { useMyContext } from "./Provider";
 
 const Form = () => {
   //microphone
-  const { transcript, listening, browserSupportsSpeechRecognition, onEnd } =
+  const { transcript, listening, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
-  const [recording, setRecording] = useState(false);
 
   const {
     userInput,
@@ -21,18 +20,15 @@ const Form = () => {
   useEffect(() => {
     setUserInput(transcript);
     if (transcript && !listening) {
-      handleStopRecording();
+      handleSubmit();
     }
   }, [transcript]);
 
   const handleStart = async () => {
     SpeechRecognition.startListening({ onEnd: handleStopRecording });
-    setRecording(true);
   };
   const handleStopRecording = () => {
-    setRecording(false);
     SpeechRecognition.stopListening();
-    handleSubmit();
   };
 
   const handleSubmit = async (e) => {
@@ -136,6 +132,7 @@ const Form = () => {
         <button
           onClick={handleSubmit}
           className=" bg-transparent rounded-[20px] px-2 py-2 mobile:px-1 mobile:py-1 text-white font-semibold focus:outline-none hover:bg-purple-600 transition-colors duration-300"
+          disabled={userInput.length === 0 ? true : false}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

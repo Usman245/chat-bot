@@ -9,6 +9,10 @@ module.exports = {
         mobile: {
           max: "640px"
         }
+      }, fontFamily: {
+        primary: "Afacad",
+        secondary: "Shadows Into Light"
+
       }
     },
   },
